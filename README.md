@@ -61,10 +61,15 @@ GEMINI_MODEL=gemini-2.5-pro
 ```
 python main.py
 ```
-#### Script will:
+### Script will:
 - Connect to Gmail IMAP  
 - Fetch Google Scholar Alert emails  
 - Parse the HTML content  
 - Extract paper titles, authors, abstracts, and links  
 - Send content to Gemini for summarization  
 - Generate a structured report in output folder
+
+---
+
+## 📄 License
+MIT License. Feel free to use, modify, and distribute.
