@@ -1,7 +1,7 @@
 # 📚 AI-Agent for Google Scholar Alert Email  
 Automated pipeline to fetch Google Scholar Alert emails, extract paper information, summarize content using Gemini, and generate clean, structured research reports.
 
-This project helps researchers efficiently process Google Scholar Alerts without manually reading hundreds of emails. It downloads new alerts, parses them, summarizes papers using Gemini models, and outputs a consolidated report.
+This project helps researchers efficiently process Google Scholar Alerts without manually reading hundreds of emails. It downloads new alerts, parses them, summarizes papers using Claude/Gemini CLI, and outputs a consolidated report.
 
 ---
 
