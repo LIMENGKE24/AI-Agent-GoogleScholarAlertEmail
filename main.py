@@ -9,6 +9,17 @@ from utils import (
     run_cli
 )
 
+logo = r"""
+     _    ___ _  _    ____ ____  
+    / \  |_ _| || |  / ___/ ___| 
+   / _ \  | || || |_| |  _\___ \ 
+  / ___ \ | ||__   _| |_| |___) |
+ /_/   \_\___|  |_|  \____|____/ 
+                                  
+AI4GS - AI for Google Scholar Alerts
+"""
+print(logo)
+
 def main():
     M = connect_imap_gmail()
     try:
