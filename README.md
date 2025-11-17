@@ -37,7 +37,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🔐 Environment Variables (.env file required)
+## 🔐 Environment Variables
 This project requires a `.env` file, which is NOT included in the repository for security reasons. Please create your own `.env` file at the root of the project:
 ```
 AI-Agent-GoogleScholarAlertEmail/.env
