@@ -48,7 +48,7 @@ EMAIL_ADDRESS=your_email@address.com
 IMAP_PASSWORD=your Gmail app password (NOT LOGIN PASSWORD)
 ANTHROPIC_API_KEY=your_API_key
 ```
-📌 Gmail IMAP requires app passwords to be enabled. Learn how to generate your own app password [here](https://support.google.com/mail/answer/185833?hl=en)
+📌 Gmail IMAP requires app passwords to be enabled. Learn how to generate your own app password [here](https://support.google.com/mail/answer/185833?hl=en).
 
 ---
 
