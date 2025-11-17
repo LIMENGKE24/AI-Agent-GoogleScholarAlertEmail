@@ -6,13 +6,16 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import json
 import subprocess
+from anthropic import Anthropic
+
+client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 # Import config values
 from config import (
     EMAIL_ADDRESS, IMAP_PASSWORD,
     IMAP_SERVER, IMAP_PORT,
     ALERT_SENDERS,
-    GEMINI_CMD, GEMINI_MODEL, GEMINI_EXTRA_ARGS,
+    CLI_CMD, CLI_MODEL, MODEL_TEMPERATURE,
     KEYWORDS,
     TODAY_ONLY, RECENT_COUNT,
     DATA_DIR
@@ -210,7 +213,7 @@ def save_items(items, tag):
     return path_jsonl, path_md
 
 
-def build_gemini_prompt(items, keywords):
+def build_prompt(items, keywords):
     lines = []
     lines.append("You are a very professional research assistant in MIT doing research of battery materials simulation researches.")
     if keywords:
@@ -243,20 +246,38 @@ def build_gemini_prompt(items, keywords):
     return "\n".join(lines)
 
 
-def run_gemini_cli(prompt_text, tag):
+def run_cli(prompt_text, tag):
     prompt_file = os.path.join(DATA_DIR, f"prompt_{tag}.txt")
     with open(prompt_file, "w", encoding="utf-8") as f:
         f.write(prompt_text)
-    cmd = [GEMINI_CMD, "-m", GEMINI_MODEL]
-    result = subprocess.run(cmd, input=prompt_text, capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"Gemini CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
-    output = result.stdout.strip()
-    md_path = os.path.join(DATA_DIR, f"gemini_summary_{tag}.md")
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(output)
-    return output, md_path
+    if CLI_CMD=="claude":
+        response = client.messages.create(
+            model=CLI_MODEL,
+            max_tokens=10000,
+            temperature=MODEL_TEMPERATURE,           
+            messages=[
+                {"role": "user", "content": prompt_text}
+            ]
+        )
+        output = response.content[0].text.strip()
+        md_path = os.path.join(DATA_DIR, f"claude_summary_{tag}.md")
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(output)
+    
+    if CLI_CMD=="gemini":
+        prompt_file = os.path.join(DATA_DIR, f"prompt_{tag}.txt")
+        with open(prompt_file, "w", encoding="utf-8") as f:
+            f.write(prompt_text)
+        cmd = [CLI_MODEL, "-m", CLI_MODEL]
+        result = subprocess.run(cmd, input=prompt_text, capture_output=True, text=True)
+        if result.returncode != 0:
+            raise RuntimeError(f"Gemini CLI failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
+        output = result.stdout.strip()
+        md_path = os.path.join(DATA_DIR, f"gemini_summary_{tag}.md")
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(output)
 
+    return output, md_path
 
 def render_html_report(tag, keywords, items, gemini_markdown, html_path):
     css = """

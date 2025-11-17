@@ -5,8 +5,8 @@ from utils import (
     connect_imap_gmail, find_all_mail_mailbox, safe_select,
     get_recent_uids, fetch_header, normalize_from, is_today,
     fetch_body_html, extract_items_from_html,
-    save_items, keyword_filter, build_gemini_prompt,
-    run_gemini_cli
+    save_items, keyword_filter, build_prompt,
+    run_cli
 )
 
 def main():
@@ -62,9 +62,9 @@ def main():
             print("No items matched your keywords.")
             return
 
-        prompt_text = build_gemini_prompt(filtered, KEYWORDS)
-        out_summary = run_gemini_cli(prompt_text, tag)
-        print(f"Gemini summary written to: {out_summary}")
+        prompt_text = build_prompt(filtered, KEYWORDS)
+        out_summary,summary_path = run_cli(prompt_text, tag)
+        print(f"AI-Agent summary written to: {summary_path}")
 
     finally:
         try:

@@ -2,17 +2,25 @@ import os
 from dotenv import load_dotenv
 
 # Email fetching settings
-TODAY_ONLY = True
-RECENT_COUNT = 100
+TODAY_ONLY = False # Set to True to fetch only today's emails
+RECENT_COUNT = 10 # Number of recent emails to check
 
 # Data directory
-DATA_DIR = "data"
+DATA_DIR = "Summarize_Output" # Directory to save outputs
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Sender(s) to match
+# Sender to match
 ALERT_SENDERS = {
     "scholaralerts-noreply@google.com"
 }
+
+# Keyword filtering settings
+KEYWORDS = 'electrolyte, lithium, battery, solid-state, ion-conductor, solid electrolyte, diffusion'
+
+# AI model settings
+CLI_CMD = 'claude' # Options: 'claude', 'gemini'
+CLI_MODEL = 'claude-sonnet-4-5-20250929' # AI model name
+MODEL_TEMPERATURE = 0.2
 
 # Load environment
 load_dotenv()
@@ -20,9 +28,3 @@ EMAIL_ADDRESS = (os.getenv("EMAIL_ADDRESS") or "").strip()
 IMAP_PASSWORD = (os.getenv("IMAP_PASSWORD") or "").strip()
 IMAP_SERVER = "imap.gmail.com"
 IMAP_PORT = 993
-
-# Summarization (Gemini CLI)
-GEMINI_CMD = (os.getenv("GEMINI_CMD") or "gemini").strip()
-GEMINI_MODEL = (os.getenv("GEMINI_MODEL") or "gemini-1.5-flash").strip()
-GEMINI_EXTRA_ARGS = (os.getenv("GEMINI_EXTRA_ARGS") or "").strip()
-KEYWORDS = [k.strip().lower() for k in (os.getenv("KEYWORDS") or "").split(",") if k.strip()]
