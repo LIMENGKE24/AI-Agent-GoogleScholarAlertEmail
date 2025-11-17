@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 
 # Email fetching settings
-TODAY_ONLY = False # Set to True to fetch only today's emails
-RECENT_COUNT = 10 # Number of recent emails to check
+TODAY_ONLY = True # Set to True to fetch only today's emails
+RECENT_COUNT = 20 # Number of recent emails to check
 
 # Data directory
 DATA_DIR = "Summarize_Output" # Directory to save outputs
@@ -15,7 +15,8 @@ ALERT_SENDERS = {
 }
 
 # Keyword filtering settings
-KEYWORDS = 'electrolyte, lithium, battery, solid-state, ion-conductor, solid electrolyte, diffusion'
+KEYWORDS = 'electrolyte, lithium, battery, solid-state, ion-conductor, solid electrolyte, diffusion, ion transport'
+KEYWORDS = [k.strip().lower() for k in KEYWORDS.split(",") if k.strip()]
 
 # AI model settings
 CLI_CMD = 'claude' # Options: 'claude', 'gemini'
