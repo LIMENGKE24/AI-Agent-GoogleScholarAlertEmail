@@ -59,18 +59,12 @@ python main.py
 ```
 ### 🔧 Configuration
 All configurable settings are located in `config.py`. You can adjust these parameters to change the behavior of the AI-agent.
-- `TODAY_ONLY`
-Set to True to fetch only the emails received today.
-- `RECENT_COUNT`
-Maximum number of recent emails to fetch.
-- `ALERT_SENDERS`
-Filter emails by sender. By default, only Google Scholar Alerts are processed.
-- `KEYWORDS`
-Only emails containing these keywords will be summarized.
-- `CLI_CMD and CLI_MODEL`
-Choose which AI model to use for summarization.
-- `MODEL_TEMPERATURE`
-Controls randomness in output.
+- `TODAY_ONLY`: Set to True to fetch only the emails received today.
+- `RECENT_COUNT`: Maximum number of recent emails to fetch.
+- `ALERT_SENDERS`: Filter emails by sender. By default, only Google Scholar Alerts are processed.
+- `KEYWORDS`: Only emails containing these keywords will be summarized.
+- `CLI_CMD and CLI_MODEL`: Choose which AI model to use for summarization.
+- `MODEL_TEMPERATURE`: Controls randomness in output.
 
 ---
 
