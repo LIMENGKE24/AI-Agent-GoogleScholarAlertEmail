@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 
 # Email fetching settings
-TODAY_ONLY = True # Set to True to fetch only today's emails
-RECENT_COUNT = 20 # Number of recent emails to check
+TODAY_ONLY = False # Set to True to fetch only today's emails
+RECENT_COUNT = 10 # Number of recent emails to check
 
 # Data directory
 DATA_DIR = "Summarize_Output" # Directory to save outputs
@@ -23,9 +23,16 @@ CLI_CMD = 'claude' # Options: 'claude', 'gemini'
 CLI_MODEL = 'claude-sonnet-4-5-20250929' # AI model name
 MODEL_TEMPERATURE = 0.2
 
+# Email sending settings
+ENABLE_EMAIL_SENDING = True # Set to False to disable email sending
+REPORT_RECEIVER_EMAIL = "faker_zzz@outlook.com" # Email address to send summary reports to
+
 # Load environment
 load_dotenv()
 EMAIL_ADDRESS = (os.getenv("EMAIL_ADDRESS") or "").strip()
 IMAP_PASSWORD = (os.getenv("IMAP_PASSWORD") or "").strip()
+SMTP_PASSWORD = IMAP_PASSWORD
 IMAP_SERVER = "imap.gmail.com"
 IMAP_PORT = 993
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587

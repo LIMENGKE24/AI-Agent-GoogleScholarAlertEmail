@@ -7,11 +7,12 @@ This project helps researchers efficiently process Google Scholar Alerts without
 
 ## ✨ Features
 
-- 🔍 **Automatically fetch Google Scholar Alert emails** via IMAP  
-- 📩 **Store email content locally** for later processing  
-- 🧠 **Call Claude/Gemini CLI model** to summarize papers (install [Claude](https://github.com/anthropics/claude-code) or [Gemini](https://github.com/google-gemini/gemini-cli))  
-- 📝 **Generate clean research reports**  
-- 🎯 **Keyword filtering** for domain-specific relevance  
+- 🔍 **Automatically fetch Google Scholar Alert emails** via IMAP
+- 📩 **Store email content locally** for later processing
+- 🧠 **Call Claude/Gemini CLI model** to summarize papers (install [Claude](https://github.com/anthropics/claude-code) or [Gemini](https://github.com/google-gemini/gemini-cli))
+- 📝 **Generate clean research reports**
+- 🎯 **Keyword filtering** for domain-specific relevance
+- 📧 **Email reports automatically** to configured recipients
 - ⚙️ **Fully configurable** via `config` file   
 
 ---
@@ -46,6 +47,7 @@ Add the following fields to it:
 ```
 EMAIL_ADDRESS=your_email@address.com
 IMAP_PASSWORD=your Gmail app password (NOT LOGIN PASSWORD)
+SMTP_PASSWORD=your Gmail app password (can be same as IMAP_PASSWORD)
 ANTHROPIC_API_KEY=your_API_key
 ```
 📌 Gmail IMAP requires app passwords to be enabled. Learn how to generate your own app password [here](https://support.google.com/mail/answer/185833?hl=en).
@@ -65,6 +67,8 @@ All configurable settings are located in `config.py`. You can adjust these param
 - `KEYWORDS`: Only emails containing these keywords will be summarized.
 - `CLI_CMD` and `CLI_MODEL`: Choose which AI model to use for summarization.
 - `MODEL_TEMPERATURE`: Controls randomness in output.
+- `ENABLE_EMAIL_SENDING`: Set to False to disable automatic email sending.
+- `REPORT_RECEIVER_EMAIL`: Email address where summary reports will be sent.
 
 ---
 
