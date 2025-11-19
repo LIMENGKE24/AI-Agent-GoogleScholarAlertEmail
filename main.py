@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from config import ALERT_SENDERS, KEYWORDS, TODAY_ONLY, RECENT_COUNT, REPORT_RECEIVER_EMAIL
@@ -6,7 +7,7 @@ from utils import (
     get_recent_uids, fetch_header, normalize_from, is_today,
     fetch_body_html, extract_items_from_html,
     save_items, keyword_filter, build_prompt,
-    run_cli, send_report_email
+    run_cli, send_report_email, convert_md_to_html
 )
 
 def display_header():
@@ -98,8 +99,13 @@ def main():
         out_summary,summary_path = run_cli(prompt_text, tag)
         print_status("AI_COMPLETE", f"AI analysis completed successfully", "SUCCESS")
 
+        print_status("HTML_GENERATION", "Creating professional HTML report...", "PROCESS")
+        html_path = os.path.join("Summarize_Output", f"ai4gs_research_report_{tag}.html")
+        convert_md_to_html(summary_path, html_path, tag, KEYWORDS, filtered)
+        print_status("HTML_COMPLETE", "Professional HTML report generated successfully", "SUCCESS")
+
         print_status("EMAIL_DISPATCH", "Delivering research report to recipient...", "PROCESS")
-        email_success = send_report_email(summary_path, tag)
+        email_success = send_report_email(html_path, tag)
 
         if email_success:
             print_status("EMAIL_SENT", f"Research report delivered to {REPORT_RECEIVER_EMAIL}", "SUCCESS")

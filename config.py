@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 # Email fetching settings
 TODAY_ONLY = False # Set to True to fetch only today's emails
-RECENT_COUNT = 10 # Number of recent emails to check
+RECENT_COUNT = 14 # Number of recent emails to check
 
 # Data directory
 DATA_DIR = "Summarize_Output" # Directory to save outputs
@@ -22,6 +22,10 @@ KEYWORDS = [k.strip().lower() for k in KEYWORDS.split(",") if k.strip()]
 CLI_CMD = 'claude' # Options: 'claude', 'gemini'
 CLI_MODEL = 'claude-sonnet-4-5-20250929' # AI model name
 MODEL_TEMPERATURE = 0.2
+
+# Report generation settings
+GENERATE_HTML = True # Generate beautiful HTML reports (recommended)
+GENERATE_MARKDOWN = True # Keep markdown files as backup
 
 # Email sending settings
 ENABLE_EMAIL_SENDING = True # Set to False to disable email sending
