@@ -1,3 +1,4 @@
 .env
 Summarize_Output/
 CLAUDE.md
+__pycache__
