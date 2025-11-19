@@ -24,7 +24,8 @@ This project helps researchers efficiently process Google Scholar Alerts without
 
 ```
 git clone https://github.com/LIMENGKE24/AI-Agent-GoogleScholarAlertEmail.git
-
+```
+```
 cd AI-Agent-GoogleScholarAlertEmail
 ```
 
@@ -32,7 +33,8 @@ cd AI-Agent-GoogleScholarAlertEmail
 
 ```
 conda create -n gmail_agent python=3.12 -y
-
+```
+```
 conda activate gmail_agent
 ```
 
