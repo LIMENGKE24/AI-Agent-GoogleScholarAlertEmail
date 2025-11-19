@@ -6,7 +6,7 @@ This project helps researchers efficiently process Google Scholar Alerts without
 
 ---
 
-## ✨ Features
+## 🌟 Features
 
 - 🔍 **Automatically fetch Google Scholar Alert emails** via IMAP
 - 📩 **Store email content locally** for later processing
