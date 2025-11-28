@@ -40,8 +40,8 @@ ai4gs init
 
 Follow the interactive prompts to enter your:
 - Gmail Address
-- Gmail App Password
-- Anthropic API Key
+- Gmail App Password (Required for IMAP access. [Generate one here](https://support.google.com/mail/answer/185833?hl=en))
+- Anthropic API Key (Required for AI summarization)
 - Research Keywords
 
 ### 2. Run the Agent
@@ -61,13 +61,6 @@ The `ai4gs init` command creates a `.env` file where you can adjust settings. Yo
 - `REPORT_RECEIVER_EMAIL`: Where to send the report.
 - `RECENT_COUNT`: Number of recent emails to check (default: 10).
 - `TODAY_ONLY`: Set to `True` to only check today's emails.
-
----
-
-## 🔐 Prerequisites
-
-1. **Gmail App Password**: You need an App Password for IMAP access. [Generate one here](https://support.google.com/mail/answer/185833?hl=en).
-2. **Anthropic API Key**: Required for the AI summarization.
 
 ---
 
