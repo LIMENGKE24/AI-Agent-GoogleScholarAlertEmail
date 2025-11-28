@@ -35,7 +35,7 @@ def display_header():
     print("║" + " "*20 + "/_/   \\_\\___|  |_|  \\____|____/              " + " "*10 + "║")
     print("║" + " "*18 + "AI-POWERED GOOGLE SCHOLAR ASSISTANT" + " "*22 + "║")
     print("╚" + "═"*75 + "╝")
-    print("      Version 0.1.0 • Professional Research Automation • Build 2025.11\n")
+    print("      Version 0.1.3 • Professional Research Automation • Build 2025.11\n")
 
 def print_status(step, message, status="INFO"):
     # All indicators have exactly 6 characters for consistent alignment
@@ -48,8 +48,21 @@ def init_config():
     """Initialize configuration by creating a .env file."""
     print_status("INIT", "Initializing AI4GS configuration...", "PROCESS")
     
-    if os.path.exists(".env"):
-        overwrite = input("A .env file already exists. Overwrite? (y/N): ").strip().lower()
+    # Determine where to save the config
+    from pathlib import Path
+    home_env = Path.home() / ".ai4gs.env"
+    local_env = Path(".env")
+    
+    print("\nWhere would you like to save the configuration?")
+    print(f"1. Global (Recommended): {home_env}")
+    print(f"2. Local (Current Dir):  {local_env.absolute()}")
+    
+    choice = input("Enter choice [1]: ").strip()
+    
+    target_path = local_env if choice == "2" else home_env
+    
+    if target_path.exists():
+        overwrite = input(f"File {target_path} already exists. Overwrite? (y/N): ").strip().lower()
         if overwrite != 'y':
             print_status("INIT", "Configuration initialization cancelled.", "WARNING")
             return
@@ -79,10 +92,10 @@ KEYWORDS={keywords}
 # MODEL_TEMPERATURE=0.2
 """
     
-    with open(".env", "w") as f:
+    with open(target_path, "w") as f:
         f.write(env_content)
         
-    print_status("INIT", "Configuration saved to .env file.", "SUCCESS")
+    print_status("INIT", f"Configuration saved to {target_path}", "SUCCESS")
     print_status("INIT", "You can now run 'ai4gs run' to start the research agent.", "INFO")
 
 def run_research():
@@ -230,7 +243,7 @@ def test_email_config():
 
 def main():
     parser = argparse.ArgumentParser(description="AI4GS: AI-Powered Google Scholar Assistant")
-    parser.add_argument("-v", "--version", action="version", version="ai4gs 0.1.0")
+    parser.add_argument("-v", "--version", action="version", version="ai4gs 0.1.3")
     
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
     

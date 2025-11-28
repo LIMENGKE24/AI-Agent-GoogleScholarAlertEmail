@@ -1,8 +1,14 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file in current directory
+# 1. Load from current directory (Highest priority)
 load_dotenv()
+
+# 2. Load from user home directory (Global config)
+home_env = Path.home() / ".ai4gs.env"
+if home_env.exists():
+    load_dotenv(dotenv_path=home_env)
 
 def get_env_bool(key, default=False):
     val = os.getenv(key, str(default)).lower()
