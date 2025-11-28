@@ -1,4 +1,0 @@
-beautifulsoup4==4.14.2
-python-dotenv==1.2.1
-markdown==3.8
-anthropic==0.73.0
