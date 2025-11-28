@@ -20,6 +20,18 @@ This project helps researchers efficiently process Google Scholar Alerts without
 
 ## 📦 Installation
 
+### 1. Create a Virtual Environment (Recommended)
+
+It is recommended to use a virtual environment to avoid conflicts.
+
+**Using Conda:**
+```bash
+conda create -n ai4gs python=3.12 -y
+conda activate ai4gs
+```
+
+### 2. Install Package
+
 Simply install the package from PyPI:
 
 ```bash
