@@ -27,6 +27,8 @@ It is recommended to use a virtual environment to avoid conflicts.
 **Using Conda:**
 ```bash
 conda create -n ai4gs python=3.12 -y
+```
+```bash
 conda activate ai4gs
 ```
 
