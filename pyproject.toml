@@ -1,0 +1,24 @@
+[project]
+name = "ai4gs"                 # pip install 的名字
+version = "0.1.0"
+description = "AI-Powered Google Scholar Assistant"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Li Mengke" }
+]
+requires-python = ">=3.8"
+dependencies = ["beautifulsoup4", "python-dotenv", "markdown", "anthropic"]
+
+[project.urls]
+Homepage = "https://github.com/LIMENGKE24/AI-Agent-GoogleScholarAlertEmail"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+ai4gs = "ai4gs.main:main"
+
+[tool.setuptools.packages]
+find = { include = ["ai4gs"] }

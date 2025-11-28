@@ -1,14 +1,28 @@
 import os
+import sys
+import argparse
 from datetime import datetime
 
-from config import ALERT_SENDERS, KEYWORDS, TODAY_ONLY, RECENT_COUNT, REPORT_RECEIVER_EMAIL
-from utils import (
-    connect_imap_gmail, find_all_mail_mailbox, safe_select,
-    get_recent_uids, fetch_header, normalize_from, is_today,
-    fetch_body_html, extract_items_from_html,
-    save_items, keyword_filter, build_prompt,
-    run_cli, send_report_email, convert_md_to_html
-)
+# Use relative imports for package compatibility
+try:
+    from .config import ALERT_SENDERS, KEYWORDS, TODAY_ONLY, RECENT_COUNT, REPORT_RECEIVER_EMAIL, DATA_DIR
+    from .utils import (
+        connect_imap_gmail, find_all_mail_mailbox, safe_select,
+        get_recent_uids, fetch_header, normalize_from, is_today,
+        fetch_body_html, extract_items_from_html,
+        save_items, keyword_filter, build_prompt,
+        run_cli, send_report_email, convert_md_to_html
+    )
+except ImportError:
+    # Fallback for running script directly
+    from config import ALERT_SENDERS, KEYWORDS, TODAY_ONLY, RECENT_COUNT, REPORT_RECEIVER_EMAIL, DATA_DIR
+    from utils import (
+        connect_imap_gmail, find_all_mail_mailbox, safe_select,
+        get_recent_uids, fetch_header, normalize_from, is_today,
+        fetch_body_html, extract_items_from_html,
+        save_items, keyword_filter, build_prompt,
+        run_cli, send_report_email, convert_md_to_html
+    )
 
 def display_header():
     print("\n╔" + "═"*75 + "╗")
@@ -21,10 +35,8 @@ def display_header():
     print("║" + " "*20 + "/_/   \\_\\___|  |_|  \\____|____/              " + " "*10 + "║")
     print("║" + " "*18 + "AI-POWERED GOOGLE SCHOLAR ASSISTANT" + " "*22 + "║")
     print("╚" + "═"*75 + "╝")
-    print("      Version 0.0.1 • Professional Research Automation • Build 2025.11\n")
+    print("      Version 0.1.0 • Professional Research Automation • Build 2025.11\n")
 
-display_header()
-                                      
 def print_status(step, message, status="INFO"):
     # All indicators have exactly 6 characters for consistent alignment
     indicators = {"INFO": "[INFO]", "SUCCESS": "[OK]  ", "WARNING": "[WARN]", "ERROR": "[ERROR]", "PROCESS": "[PROC]"}
@@ -32,10 +44,58 @@ def print_status(step, message, status="INFO"):
     timestamp = datetime.now().strftime("%H:%M:%S")
     print(f"[{timestamp}] {indicator} {step.ljust(25)} │ {message}")
 
-def main():
+def init_config():
+    """Initialize configuration by creating a .env file."""
+    print_status("INIT", "Initializing AI4GS configuration...", "PROCESS")
+    
+    if os.path.exists(".env"):
+        overwrite = input("A .env file already exists. Overwrite? (y/N): ").strip().lower()
+        if overwrite != 'y':
+            print_status("INIT", "Configuration initialization cancelled.", "WARNING")
+            return
+
+    print("\nPlease provide the following configuration details:")
+    
+    email = input("Gmail Address: ").strip()
+    password = input("Gmail App Password (not login password): ").strip()
+    api_key = input("Anthropic API Key: ").strip()
+    receiver = input(f"Report Receiver Email [{email}]: ").strip() or email
+    keywords = input("Research Keywords (comma separated): ").strip()
+    
+    env_content = f"""# AI4GS Configuration
+EMAIL_ADDRESS={email}
+IMAP_PASSWORD={password}
+ANTHROPIC_API_KEY={api_key}
+
+# Report Settings
+REPORT_RECEIVER_EMAIL={receiver}
+KEYWORDS={keywords}
+
+# Advanced Settings (Defaults)
+# RECENT_COUNT=10
+# TODAY_ONLY=False
+# CLI_CMD=claude
+# CLI_MODEL=claude-sonnet-4-5-20250929
+# MODEL_TEMPERATURE=0.2
+"""
+    
+    with open(".env", "w") as f:
+        f.write(env_content)
+        
+    print_status("INIT", "Configuration saved to .env file.", "SUCCESS")
+    print_status("INIT", "You can now run 'ai4gs run' to start the research agent.", "INFO")
+
+def run_research():
+    display_header()
     print_status("INITIALIZATION", "Starting AI4GS Research System...", "INFO")
 
-    M = connect_imap_gmail()
+    try:
+        M = connect_imap_gmail()
+    except Exception as e:
+        print_status("CONNECTION_ERROR", f"Failed to connect: {str(e)}", "ERROR")
+        print_status("HINT", "Run 'ai4gs init' to configure your credentials.", "INFO")
+        return
+
     try:
         print_status("EMAIL_CONNECTION", "Establishing secure connection to Gmail IMAP server...", "PROCESS")
         mailbox = find_all_mail_mailbox(M) or "INBOX"
@@ -100,7 +160,7 @@ def main():
         print_status("AI_COMPLETE", f"AI analysis completed successfully", "SUCCESS")
 
         print_status("HTML_GENERATION", "Creating professional HTML report...", "PROCESS")
-        html_path = os.path.join("Summarize_Output", f"ai4gs_research_report_{tag}.html")
+        html_path = os.path.join(DATA_DIR, f"ai4gs_research_report_{tag}.html")
         convert_md_to_html(summary_path, html_path, tag, KEYWORDS, filtered)
         print_status("HTML_COMPLETE", "Professional HTML report generated successfully", "SUCCESS")
 
@@ -121,6 +181,88 @@ def main():
             pass
         M.logout()
 
+def clean_output():
+    """Clean up the output directory."""
+    if not os.path.exists(DATA_DIR):
+        print_status("CLEAN", f"Directory {DATA_DIR} does not exist.", "WARNING")
+        return
+
+    confirm = input(f"Are you sure you want to delete all files in {DATA_DIR}? (y/N): ").strip().lower()
+    if confirm != 'y':
+        print_status("CLEAN", "Operation cancelled.", "INFO")
+        return
+
+    count = 0
+    for filename in os.listdir(DATA_DIR):
+        file_path = os.path.join(DATA_DIR, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+                count += 1
+        except Exception as e:
+            print_status("CLEAN", f"Failed to delete {file_path}. Reason: {e}", "ERROR")
+    
+    print_status("CLEAN", f"Successfully deleted {count} files from {DATA_DIR}.", "SUCCESS")
+
+def test_email_config():
+    """Send a test email to verify configuration."""
+    print_status("TEST", "Sending test email...", "PROCESS")
+    try:
+        # Create a dummy file for testing
+        test_file = os.path.join(DATA_DIR, "test_email.txt")
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(test_file, "w") as f:
+            f.write("This is a test email from AI4GS.")
+        
+        success = send_report_email(test_file, "TEST-EMAIL")
+        
+        if success:
+            print_status("TEST", f"Test email sent successfully to {REPORT_RECEIVER_EMAIL}", "SUCCESS")
+        else:
+            print_status("TEST", "Failed to send test email. Check your credentials.", "ERROR")
+            
+        # Clean up
+        if os.path.exists(test_file):
+            os.remove(test_file)
+            
+    except Exception as e:
+        print_status("TEST", f"Error sending test email: {str(e)}", "ERROR")
+
+def main():
+    parser = argparse.ArgumentParser(description="AI4GS: AI-Powered Google Scholar Assistant")
+    parser.add_argument("-v", "--version", action="version", version="ai4gs 0.1.0")
+    
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    
+    # 'init' command
+    init_parser = subparsers.add_parser("init", help="Initialize configuration (.env file)")
+    
+    # 'run' command
+    run_parser = subparsers.add_parser("run", help="Run the research agent")
+    
+    # 'clean' command
+    clean_parser = subparsers.add_parser("clean", help="Clean up the output directory")
+    
+    # 'test-email' command
+    test_email_parser = subparsers.add_parser("test-email", help="Send a test email to verify configuration")
+    
+    args = parser.parse_args()
+    
+    if args.command == "init":
+        init_config()
+    elif args.command == "run":
+        run_research()
+    elif args.command == "clean":
+        clean_output()
+    elif args.command == "test-email":
+        test_email_config()
+    else:
+        # Default behavior if no command is provided (or just 'ai4gs')
+        if len(sys.argv) == 1:
+            parser.print_help()
+        else:
+            parser.print_help()
 
 if __name__ == "__main__":
     main()
+
