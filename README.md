@@ -40,7 +40,7 @@ ai4gs init
 
 Follow the interactive prompts to enter your:
 - Gmail Address
-- Gmail App Password (Required for IMAP access. [Generate one here](https://support.google.com/mail/answer/185833?hl=en))
+- Gmail App Password (Not login password, and required for IMAP access. [Generate one here](https://support.google.com/mail/answer/185833?hl=en))
 - Anthropic API Key (Required for AI summarization)
 - Research Keywords
 
