@@ -1,5 +1,10 @@
 # 📚 AI-Agent for Google Scholar Alert Email (AI4GS)
 
+[![PyPI version](https://badge.fury.io/py/ai4gs.svg)](https://badge.fury.io/py/ai4gs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/LIMENGKE24/AI-Agent-GoogleScholarAlertEmail.svg)](https://github.com/LIMENGKE24/AI-Agent-GoogleScholarAlertEmail/issues)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
 Automated pipeline to fetch Google Scholar Alert emails, extract paper information, summarize content using Claude/Gemini, and generate clean, structured research reports.
 
 This project helps researchers efficiently process Google Scholar Alerts without manually reading hundreds of emails. It downloads new alerts, parses them, summarizes papers using Claude/Gemini CLI, and outputs a consolidated report.
